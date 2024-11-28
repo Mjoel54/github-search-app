@@ -5,6 +5,7 @@ import { searchGithubUser } from "../api/API";
 // import { searchGithub, searchGithubUser } from "../api/API";
 
 import { User } from "../interfaces/Candidate.interface";
+import {UserList} from "../components/userList";
 
 const CandidateSearch = () => {
   const [username, setUsername] = useState<string>("");
@@ -21,18 +22,18 @@ const CandidateSearch = () => {
 
     try {
       const fetchedUsers = await searchGithubUser(username);
-      setUsers(fetchedUsers);
-      console.log(users)
+      const mappedFetchedUsers = fetchedUsers.items;
+      setUsers(mappedFetchedUsers);
+      // console.log(users);
     } catch (err) {
       console.error(err);
     }
     setLoading(false);
-
-
   };
 
-  return ( 
+  return (
     <div>
+      <h1>Candidate Search</h1>
       <form onSubmit={onSearch}>
         <input
           type="text"
@@ -43,6 +44,7 @@ const CandidateSearch = () => {
         <button type="submit">Search</button>
       </form>
       {loading && <p>Loading...</p>}
+      <UserList users={users}/>
     </div>
   );
 };
