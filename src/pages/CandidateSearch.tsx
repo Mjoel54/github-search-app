@@ -5,7 +5,7 @@ import { searchGithubUser } from "../api/API";
 // import { searchGithub, searchGithubUser } from "../api/API";
 
 import { User } from "../interfaces/Candidate.interface";
-import {UserList} from "../components/userList";
+import { UserList } from "../components/userList";
 
 const CandidateSearch = () => {
   const [username, setUsername] = useState<string>("");
@@ -33,18 +33,30 @@ const CandidateSearch = () => {
 
   return (
     <div>
-      <h1>Candidate Search</h1>
-      <form onSubmit={onSearch}>
+      <h1 className="h1 text-center my-4">Candidate Search</h1>
+
+      <form onSubmit={onSearch} className="d-flex justify-content-center">
         <input
           type="text"
           value={username}
           onChange={onChange}
           placeholder="Search for a user"
+          className="mx-2"
         />
-        <button type="submit">Search</button>
+
+        <button type="submit" className="mx-2">
+          Search
+        </button>
       </form>
-      {loading && <p>Loading...</p>}
-      <UserList users={users}/>
+
+      {loading && (
+        <div className="d-flex justify-content-center mt-4">
+          <div className="spinner-border text-light" role="status">
+            <span className="sr-only"></span>
+          </div>
+        </div>
+      )}
+      <UserList users={users} />
     </div>
   );
 };
