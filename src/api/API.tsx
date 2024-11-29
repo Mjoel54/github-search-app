@@ -1,9 +1,21 @@
+import { GithubUserResponse, User } from "../interfaces/Candidate.interface";
+
+export function mapGithubUserResponse(response: GithubUserResponse): User {
+  return {
+    id: response.id.toString(),
+    login: response.login,
+    avatar_url: response.avatar_url,
+    html_url: response.html_url,
+  };
+}
+
+
 const searchGithub = async () => {
   try {
     const start = Math.floor(Math.random() * 100000000) + 1;
     // console.log(import.meta.env);
     const response = await fetch(
-      `https://api.github.com/users?since=${start}`,
+      `https://api.github.com/users?since=${start}&per_page=10`,
       {
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
@@ -15,7 +27,6 @@ const searchGithub = async () => {
     if (!response.ok) {
       throw new Error('invalid API response, check the network tab');
     }
-    // console.log('Data:', data);
     return data;
   } catch (err) {
     // console.log('an error occurred', err);
@@ -24,6 +35,24 @@ const searchGithub = async () => {
 };
 
 const searchGithubUser = async (username: string) => {
+  try {
+    const response = await fetch(`https://api.github.com/search/users?q=${username}&per_page=10`, {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error('invalid API response, check the network tab');
+    }
+    return data;
+  } catch (err) {
+    console.log('an error occurred', err);
+    return {};
+  }
+};
+
+const searchGithubUserName = async (username: string) => {
   try {
     const response = await fetch(`https://api.github.com/users/${username}`, {
       headers: {
@@ -36,9 +65,9 @@ const searchGithubUser = async (username: string) => {
     }
     return data;
   } catch (err) {
-    // console.log('an error occurred', err);
+    console.log('an error occurred', err);
     return {};
   }
 };
 
-export { searchGithub, searchGithubUser };
+export { searchGithub, searchGithubUser, searchGithubUserName };
